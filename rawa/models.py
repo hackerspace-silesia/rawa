@@ -53,7 +53,7 @@ class UsedToken(Base):
     score = db.Column(db.Integer, nullable=False)
 
     user = relationship(User, backref='used_tokens')
-    token = relationship(User, backref='used_tokens')
+    token = relationship(Token, backref='used_tokens')
 
 
 class Prize(Base):
