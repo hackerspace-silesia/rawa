@@ -2,6 +2,10 @@ from datetime import datetime, date, time
 from typing import List
 from uuid import uuid4
 
+from PIL.Image import Image
+from qrcode import QRCode
+from qrcode.constants import ERROR_CORRECT_H
+
 from rawa.commands.exceptions import CommandError
 from rawa.models import db, Station, Token, UsedToken, User
 
@@ -51,3 +55,10 @@ def use_token(user: User, token_value: str) -> UsedToken:
     db.session.commit()
     return used_token
 
+
+def generate_qr_code(token: Token, prefix: str = '') -> Image:
+    qrcode = QRCode(error_correction=ERROR_CORRECT_H, border=0)
+    qrcode.add_data(prefix + token.value)
+    qrcode.make()
+
+    return qrcode.make_image()
