@@ -23,3 +23,42 @@ class Base(db.Model):
     @declared_attr
     def __tablename__(cls):
         return cls.__name__.lower()
+
+class User(Base):
+    __abstract__ = False
+    email = db.Column(db.String(128), nullable=False, index=True)
+    password = db.Column(db.String(128))
+
+
+class Station(Base):
+    __abstract__ = False
+    name = db.Column(db.String(128), nullable=False, index=True)
+    score = db.Column(db.Integer, nullable=False)
+
+
+class Token(Base):
+    __abstract__ = False
+    station_id = db.Column(db.Integer, db.ForeignKey('station.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
+    value = db.Column(db.String(128))
+
+    station = relationship(Station, backref='tokens')
+
+
+class UsedToken(Base):
+    __abstract__ = False
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    token_id = db.Column(db.Integer, db.ForeignKey('token.id'), nullable=False)
+    timestamp = db.Column(db.DateTime, nullable=False)
+    score = db.Column(db.Integer, nullable=False)
+
+    user = relationship(User, backref='used_tokens')
+    token = relationship(User, backref='used_tokens')
+
+
+class Prize(Base):
+    __abstract__ = False
+    name = db.Column(db.String(128))
+    logo = db.Column(db.String(128))
+    description = db.Column(db.String(128))
+    score = db.Column(db.Integer)
