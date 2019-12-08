@@ -19,11 +19,11 @@ def hash_password(password: str) -> str:
 def login(email: str, password: str) -> Optional[User]:
     return (
         User.query
-        .filter_by(
+            .filter_by(
             email=email,
             password=hash_password(password),
         )
-        .first()
+            .first()
     )
 
 
@@ -69,22 +69,25 @@ def register(email: str, password: str) -> User:
 def compute_stats(user: User):
     score, used_tokens_count = (
         db.session
-        .query(
+            .query(
             func.sum(UsedToken.score),
             func.count(UsedToken.id),
         )
-        .filter(UsedToken.user == user)
-        .first()
+            .filter(UsedToken.user == user)
+            .first()
     )
 
     used_score = (
         db.session
-        .query(func.sum(Prize.score))
-        .join(Prize.bought_prizes)
-        .filter(BoughtPrize.user == user)
-        .scalar()
+            .query(func.sum(Prize.score))
+            .join(Prize.bought_prizes)
+            .filter(BoughtPrize.user == user)
+            .scalar()
     )
 
     if used_score:
         score -= used_score
-    return score, used_tokens_count
+    return (
+        score or 0,
+        used_tokens_count or 0
+    )

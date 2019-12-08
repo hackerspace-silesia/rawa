@@ -13,11 +13,10 @@ source venv3/bin/activate
 python setup.py develop
 ```
 
-# dev
+# how to run dev
 
 ```
 # (in venv)
 alembic upgrade head
 FLASK_DEBUG=1 FLASK_APP=rawa/app.py python -m flask run
 ```
-

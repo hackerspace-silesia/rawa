@@ -7,13 +7,13 @@ def find_prize(prize_id: int) -> Optional[Prize]:
     return Prize.query.filter_by(id=prize_id).first()
 
 
-def get_available_prizes(user: User, score: int) -> List[Prize]:
+def get_available_prizes(user: User, user_score: int) -> List[Prize]:
     return list(
         Prize.query
         .outerjoin(Prize.bought_prizes)
         .filter(
             BoughtPrize.user != user,
-            Prize.score <= score,
+            Prize.score <= user_score,
         )
         .order_by(Prize.score)
     )
