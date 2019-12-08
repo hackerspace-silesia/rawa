@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<img src="static/images/logo.png"  alt="logo"/>
+
+<h4 class="title is-4 has-text-black has-background-white has-text-centered"> Już oszczędziliśmy &#9829 <br> 1000l paliwa w grudniu</h4>
+
+ <a href="{{ url_for('register') }}" >Dołącz do nas</a><br>
+ <a href="{{ url_for('login') }}">Zaloguj się</a>
+
+{% endblock %}

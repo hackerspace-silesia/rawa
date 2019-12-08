@@ -1,0 +1,15 @@
+body {
+    background-color: #bbdefb;
+    height: 100vh;
+    font-family: Barlow, sans-serif;
+}
+
+a {
+    display: block;
+    background-color: #3d8af7;
+    color: #FFFFFF;
+    font-size: 20px;
+    font-weight: bold;
+    width: 100%;
+    text-align: center;
+}
