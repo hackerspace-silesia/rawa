@@ -1,6 +1,7 @@
 from os import environ
+from io import BytesIO
 
-from flask import Flask, render_template, request, session
+from flask import Flask, render_template, request, session, send_file, redirect
 
 from rawa.commands.exceptions import CommandError
 from rawa.models import db
@@ -37,7 +38,7 @@ def login_post():
         return render_template('login.html', failed=True)
     else:
         session['user_id'] = user.id
-        return render_template('dashboard.html')
+        return redirect('/')
 
 
 @app.route('/register/', methods=['GET'])
@@ -67,11 +68,11 @@ def use_token(token_value):
         used_token = command_use_token(user, token_value)
     except CommandError as exp:
         return render_template(
-            'use_token_error.html',
+            'use_token/error.html',
             errs=exp.args[0],
         )
     else:
-        return render_template('use_token_success.html', used_token=used_token)
+        return render_template('use_token/success.html', used_token=used_token)
 
 
 @app.route('/token/<token_id>')
@@ -79,7 +80,11 @@ def show_token(token_id):
     token = find_token(int(token_id))
     if not token:
         return '', 404
-    code = generate_qr_code(token, prefix='http://')
+    img_io = BytesIO()
+    img = generate_qr_code(token, prefix='http://172.50.2.67:5000/use/')
+    img.save(img_io, 'PNG')
+    img_io.seek(0)
+    return send_file(img_io, mimetype='image/png')
 
 
 if __name__ == '__main__':

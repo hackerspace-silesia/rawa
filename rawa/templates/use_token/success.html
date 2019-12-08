@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h4 class="title is-4 has-text-black has-background-white has-text-centered">
+  Gratulacje
+</h4>
+
+<div>
+  Zyskałeś {{used_token.score}} punktów za ten przejazd.
+</div>
+<div>
+  BLA BLA WIĘCEJ WESOŁYCH WIADOMOŚCI
+</div>
+
+
+<div class="link-home">
+ <a href="{{ url_for('home') }}">Wróć do głównej strony</a>
+</div>
+{% endblock %}
