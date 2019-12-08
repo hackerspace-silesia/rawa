@@ -40,7 +40,7 @@ class Token(Base):
     __abstract__ = False
     station_id = db.Column(db.Integer, db.ForeignKey('station.id'), nullable=False)
     timestamp = db.Column(db.DateTime, nullable=False)
-    value = db.Column(db.String(128))
+    value = db.Column(db.String(32), index=True)
 
     station = relationship(Station, backref='tokens')
 
