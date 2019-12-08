@@ -4,7 +4,7 @@ from io import BytesIO
 from flask import Flask, render_template, request, session, send_file, redirect
 
 from rawa.commands.exceptions import CommandError
-from rawa.commands.prize import get_available_prizes, get_bought_prizes, \
+from rawa.commands.prize import get_all_prizes, get_bought_prizes, \
     find_prize
 from rawa.commands.prize import buy_prize as command_buy_prize
 from rawa.models import db
@@ -80,12 +80,16 @@ def register_post():
         return render_template('register_done.html')
 
 
+@app.route('/unathorized/', methods=['GET'])
+def unauthorize():
+    return render_template('unauthorized.html')
+
+
 @app.route('/use/<token_value>')
 def use_token(token_value):
-    user = find_user(user_id=session['user_id'])
+    user = find_user(user_id=session.get('user_id'))
     if not user:
-        return redirect('/')
-
+        return redirect('/unathorized')
     try:
         used_token = command_use_token(user, token_value)
     except CommandError as exp:
@@ -111,13 +115,13 @@ def show_token(token_id):
 
 def _show_prizes(user, message=None):
     score, _ = compute_stats(user)
-    available_prizes = get_available_prizes(user, score)
+    all_prizes = get_all_prizes()
     bought_prizes = get_bought_prizes(user)
     return render_template(
         'prize.html',
         user=user,
         message=message,
-        available_prizes=available_prizes,
+        available_prizes=all_prizes,
         bought_prizes=bought_prizes,
     )
 
