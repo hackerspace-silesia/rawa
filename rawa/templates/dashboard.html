@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<nav class="panel is-info has-background-white">
+  <p class="panel-heading">
+    Panel Użytkownika
+  </p>
+  <a class="panel-block">
+    Hej {{user.email}}! Miło cię widzieć!
+  </a>
+  <a class="panel-block">
+    Twoja ilość punktów: {{score}}
+  </a>
+  <a class="panel-block">
+    {{used_tokens_count}} razy skasowałeś QR kod w tym miesiącu
+  </a>
+  <a class="panel-block">
+    Dzięki Tobie zaoszczędziliśmy milion litrów benzyny <3
+  </a>
+</nav>
+
+<div class="link-home">
+  <a href="/prizes">Atrakcyjne Nagrody</a>
+  <a href="/logout">Wyloguj się</a>
+</div>
+{% endblock %}

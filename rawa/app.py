@@ -5,7 +5,7 @@ from flask import Flask, render_template, request, session, send_file, redirect
 
 from rawa.commands.exceptions import CommandError
 from rawa.models import db
-from rawa.commands.user import find_user
+from rawa.commands.user import find_user, compute_stats
 from rawa.commands.user import register as command_register
 from rawa.commands.user import login as command_login
 from rawa.commands.token import use_token as command_use_token
@@ -21,7 +21,20 @@ db.init_app(app)
 
 @app.route('/')
 def home():
+    user = find_user(session.get('user_id'))
+    if user is not None:
+        return dashboard(user)
     return render_template('home.html')
+
+
+def dashboard(user):
+    score, used_tokens_count = compute_stats(user)
+    return render_template(
+        'dashboard.html',
+        score=score,
+        used_tokens_count=used_tokens_count,
+        user=user,
+    )
 
 
 @app.route('/login/', methods=['GET'])
@@ -44,6 +57,12 @@ def login_post():
 @app.route('/register/', methods=['GET'])
 def register():
     return render_template('register.html')
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    del session['user_id']
+    return redirect('/')
 
 
 @app.route('/register/', methods=['POST'])
