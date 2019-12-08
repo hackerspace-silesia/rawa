@@ -25,6 +25,10 @@ def login(email: str, password: str) -> Optional[User]:
     )
 
 
+def find_user(user_id: int) -> Optional[User]:
+    return User.query.filter_by(id=user_id).first()
+
+
 def email_is_valid(email: str) -> bool:
     return re_email.match(email) is not None
 
