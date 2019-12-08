@@ -127,17 +127,17 @@ def _show_prizes(user, message=None):
 
 @app.route('/prizes')
 def show_prizes():
-    user = find_user(user_id=session['user_id'])
+    user = find_user(user_id=session.get('user_id'))
     if not user:
-        return redirect('/')
+        return redirect('/unathorized')
     return _show_prizes(user)
 
 
 @app.route('/prize/<prize_id>')
 def buy_prize(prize_id):
-    user = find_user(user_id=session['user_id'])
+    user = find_user(user_id=session.get('user_id'))
     if not user:
-        return redirect('/')
+        return redirect('/unathorized')
     prize = find_prize(int(prize_id))
     if not prize:
         return '', 404
