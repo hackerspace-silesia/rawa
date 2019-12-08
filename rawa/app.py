@@ -4,7 +4,9 @@ from io import BytesIO
 from flask import Flask, render_template, request, session, send_file, redirect
 
 from rawa.commands.exceptions import CommandError
-from rawa.commands.prize import get_available_prizes, get_bought_prizes
+from rawa.commands.prize import get_available_prizes, get_bought_prizes, \
+    find_prize
+from rawa.commands.prize import buy_prize as command_buy_prize
 from rawa.models import db
 from rawa.commands.user import find_user, compute_stats
 from rawa.commands.user import register as command_register
@@ -107,21 +109,37 @@ def show_token(token_id):
     return send_file(img_io, mimetype='image/png')
 
 
+def _show_prizes(user, message=None):
+    score, _ = compute_stats(user)
+    available_prizes = get_available_prizes(user, score)
+    bought_prizes = get_bought_prizes(user)
+    return render_template(
+        'prize.html',
+        user=user,
+        message=message,
+        available_prizes=available_prizes,
+        bought_prizes=bought_prizes,
+    )
+
 @app.route('/prizes')
 def show_prizes():
     user = find_user(user_id=session['user_id'])
     if not user:
         return redirect('/')
-    score, _ = compute_stats(user)
-    available_prizes = get_available_prizes(score)
-    bought_prizes = get_bought_prizes(user)
-    return render_template(
-        'prize.html',
-        user=user,
-        available_prizes=available_prizes,
-        bought_prizes=bought_prizes,
-    )
+    return _show_prizes(user)
 
+
+@app.route('/prize/<prize_id>')
+def buy_prize(prize_id):
+    user = find_user(user_id=session['user_id'])
+    if not user:
+        return redirect('/')
+    prize = find_prize(int(prize_id))
+    if not prize:
+        return '', 404
+
+    command_buy_prize(user, prize)
+    return _show_prizes(user, message=f'Kupiłeś "{prize.name}"!')
 
 if __name__ == '__main__':
     app.run(debug=True)
