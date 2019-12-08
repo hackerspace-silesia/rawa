@@ -1,6 +1,13 @@
 {% extends 'base.html' %}
 
+{% block head %}
+  {{ super() }}
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+{% endblock %}
+
 {% block content %}
+<div id="plot">
+</div>
 <nav class="panel is-info has-background-white">
   <p class="panel-heading">
     Panel Użytkownika
@@ -23,4 +30,33 @@
   <a href="/prizes">Atrakcyjne Nagrody</a>
   <a href="/logout">Wyloguj się</a>
 </div>
+
+<script>
+  var data = [
+  {
+    x: ['październik', 'listopad', 'grudzień'],
+    y: [2000, 1400, 2300],
+    type: 'bar',
+    marker: {
+      color: '#fcd667',
+    },
+  }
+];
+
+var layout = {
+  title: 'Punkty wszystkich użytkowników',
+  paper_bgcolor: 'rgba(0,0,0,0)',
+  plot_bgcolor: 'rgba(0,0,0,0)',
+  showlegend: false,
+  height: 300,
+};
+
+var options = {
+  displayModeBar: false,
+  scrollZoom: false,
+  staticPlot: true
+}
+
+Plotly.newPlot('plot', data, layout, options);
+</script>
 {% endblock %}
