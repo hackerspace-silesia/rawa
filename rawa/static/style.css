@@ -4,7 +4,7 @@ body {
     font-family: Barlow, sans-serif;
 }
 
-a {
+.link-home a {
     display: block;
     background-color: #3d8af7;
     color: #FFFFFF;
