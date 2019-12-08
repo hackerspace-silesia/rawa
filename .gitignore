@@ -1,6 +1,7 @@
 test.db
 .idea
 venv/
+venv3/
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
