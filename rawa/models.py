@@ -24,6 +24,7 @@ class Base(db.Model):
     def __tablename__(cls):
         return cls.__name__.lower()
 
+
 class User(Base):
     __abstract__ = False
     email = db.Column(db.String(128), nullable=False, index=True)
@@ -58,7 +59,16 @@ class UsedToken(Base):
 
 class Prize(Base):
     __abstract__ = False
-    name = db.Column(db.String(128))
+    name = db.Column(db.String(128), nullable=False)
     logo = db.Column(db.String(128))
-    description = db.Column(db.String(128))
+    description = db.Column(db.String(128), nullable=False)
     score = db.Column(db.Integer)
+
+
+class BoughtPrize(Base):
+    __abstract__ = False
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    prize_id = db.Column(db.Integer, db.ForeignKey('prize.id'), nullable=False)
+
+    user = relationship(User, backref='bought_prizes')
+    prize = relationship(Prize, backref='bought_prizes')

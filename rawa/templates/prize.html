@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h4 class="title is-4 has-text-black has-background-white has-text-centered">
+  Nagrody
+</h4>
+
+{% for prize in available_prizes %}
+<div class="card card-prize">
+  <div class="card-content">
+    <p class="title">
+      {% if prize.logo %}
+        <img src="{{ prize.logo }}" alt="logo" />
+      {% endif %}
+      {{ prize.name }}
+    </p>
+    <p class="subtitle">
+      {{prize.description}}
+    </p>
+  </div>
+  <footer class="card-footer">
+    <p class="card-footer-item">
+      <span>
+        {{ prize.score }} punktów
+      </span>
+    </p>
+    <p class="card-footer-item">
+      <span>
+        <a href="/prize/{{prize.id}}">Kup</a>
+      </span>
+    </p>
+  </footer>
+</div>
+{% endfor %}
+
+<div class="link-home">
+  <a href="/">Główny Panel</a>
+</div>
+{% endblock %}

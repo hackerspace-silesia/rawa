@@ -4,6 +4,7 @@ from io import BytesIO
 from flask import Flask, render_template, request, session, send_file, redirect
 
 from rawa.commands.exceptions import CommandError
+from rawa.commands.prize import get_available_prizes, get_bought_prizes
 from rawa.models import db
 from rawa.commands.user import find_user, compute_stats
 from rawa.commands.user import register as command_register
@@ -81,7 +82,7 @@ def register_post():
 def use_token(token_value):
     user = find_user(user_id=session['user_id'])
     if not user:
-        return '', 401
+        return redirect('/')
 
     try:
         used_token = command_use_token(user, token_value)
@@ -104,6 +105,22 @@ def show_token(token_id):
     img.save(img_io, 'PNG')
     img_io.seek(0)
     return send_file(img_io, mimetype='image/png')
+
+
+@app.route('/prizes')
+def show_prizes():
+    user = find_user(user_id=session['user_id'])
+    if not user:
+        return redirect('/')
+    score, _ = compute_stats(user)
+    available_prizes = get_available_prizes(score)
+    bought_prizes = get_bought_prizes(user)
+    return render_template(
+        'prize.html',
+        user=user,
+        available_prizes=available_prizes,
+        bought_prizes=bought_prizes,
+    )
 
 
 if __name__ == '__main__':
