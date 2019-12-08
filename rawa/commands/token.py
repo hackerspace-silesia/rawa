@@ -10,6 +10,11 @@ from rawa.commands.exceptions import CommandError
 from rawa.models import db, Station, Token, UsedToken, User
 
 
+def find_token(token_id: int) -> Token:
+    # todo - token_id should be a UUID, not integer (security)
+    return Token.query.filter_by(id=token_id).first()
+
+
 def _generate_token(station: Station, timestamp: datetime) -> Token:
     token = Token(
         station=station,
