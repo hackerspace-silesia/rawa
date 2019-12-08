@@ -3,8 +3,10 @@ from os import environ
 from typing import Optional
 from re import compile as re_compile
 
+from sqlalchemy import func
+
 from rawa.commands.exceptions import CommandError
-from rawa.models import db, User
+from rawa.models import db, User, UsedToken, BoughtPrize, Prize
 
 SALT = environ.get('APP_SALT', 'foobar').encode()
 re_email = re_compile(r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)")
@@ -62,3 +64,27 @@ def register(email: str, password: str) -> User:
     db.session.add(user)
     db.session.commit()
     return user
+
+
+def compute_stats(user: User):
+    score, used_tokens_count = (
+        db.session
+        .query(
+            func.sum(UsedToken.score),
+            func.count(UsedToken.id),
+        )
+        .filter(UsedToken.user == user)
+        .first()
+    )
+
+    used_score = (
+        db.session
+        .query(func.sum(Prize.score))
+        .join(Prize.bought_prizes)
+        .filter(BoughtPrize.user == user)
+        .scalar()
+    )
+
+    if used_score:
+        score -= used_score
+    return score, used_tokens_count

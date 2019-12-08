@@ -1,6 +1,7 @@
 body {
     background-color: #bbdefb;
-    height: 100vh;
+    background: linear-gradient(#bbdefb, #3b7ba8);
+    min-height: 100vh;
     font-family: Barlow, sans-serif;
 }
 
@@ -12,4 +13,10 @@ body {
     font-weight: bold;
     width: 100%;
     text-align: center;
+    margin: 20px 0;
+    padding: 30px 0;
+}
+
+.card-prize {
+    margin: 20px 0;
 }

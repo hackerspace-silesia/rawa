@@ -10,6 +10,11 @@ from rawa.commands.exceptions import CommandError
 from rawa.models import db, Station, Token, UsedToken, User
 
 
+def find_token(token_id: int) -> Token:
+    # todo - token_id should be a UUID, not integer (security)
+    return Token.query.filter_by(id=token_id).first()
+
+
 def _generate_token(station: Station, timestamp: datetime) -> Token:
     token = Token(
         station=station,
@@ -42,13 +47,14 @@ def use_token(user: User, token_value: str) -> UsedToken:
     if not token:
         raise CommandError({'token': 'token jest niepoprawny'})
 
-    used_token_before = UsedToken.query.filter_by(user=user, token=token)
+    used_token_before = UsedToken.query.filter_by(user=user, token=token).first()
     if used_token_before:
         raise CommandError({'token': 'token został już zużyty'})
 
     used_token = UsedToken(
         user=user,
         token=token,
+        timestamp=datetime.now(),
         score=_compute_score_from_token(token)
     )
     db.session.add(used_token)
@@ -57,7 +63,7 @@ def use_token(user: User, token_value: str) -> UsedToken:
 
 
 def generate_qr_code(token: Token, prefix: str = '') -> Image:
-    qrcode = QRCode(error_correction=ERROR_CORRECT_H, border=0)
+    qrcode = QRCode(error_correction=ERROR_CORRECT_H)
     qrcode.add_data(prefix + token.value)
     qrcode.make()
 

@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h4 class="title has-text-white has-text-centered">
+  Nagrody
+</h4>
+
+{% if message %}
+<article class="message is-success">
+  <div class="message-header">
+    <p>Success</p>
+  </div>
+  <div class="message-body">
+    {{ message }}
+  </div>
+</article>
+{% endif %}
+
+{% for prize in available_prizes %}
+<div class="card card-prize">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-left">
+        {% if prize.logo %}
+        <figure class="image is-128x128">
+          <img
+              src="{{ prize.logo }}"
+              alt="{{prize.name}}"
+              class="is-rounded"
+          />
+        </figure>
+        {% endif %}
+      </div>
+      <div class="media-content">
+        <p class="title is-4">{{prize.name}}</p>
+      </div>
+    </div>
+    <div class="content">
+      {{prize.description}}
+    </div>
+  </div>
+  <footer class="card-footer">
+    <p class="card-footer-item">
+      <span>
+        {{ prize.score }} punktów
+      </span>
+    </p>
+    <p class="card-footer-item">
+      <span>
+        <a href="/prize/{{prize.id}}">Kup</a>
+      </span>
+    </p>
+  </footer>
+</div>
+{% endfor %}
+
+<h4 class="title has-text-white has-text-centered">
+  Kupione Nagrody
+</h4>
+
+{% for prize in bought_prizes %}
+<div class="card card-prize">
+  <div class="card-content">
+    <div class="media">
+      <div class="media-left">
+        {% if prize.logo %}
+        <figure class="image is-128x128">
+          <img
+              src="{{ prize.logo }}"
+              alt="{{prize.name}}"
+              class="is-rounded"
+          />
+        </figure>
+        {% endif %}
+      </div>
+      <div class="media-content">
+        <p class="title is-4">{{prize.name}}</p>
+      </div>
+    </div>
+    <div class="content">
+      {{prize.description}}
+    </div>
+  </div>
+  <footer class="card-footer">
+    <p class="card-footer-item">
+      <span>
+        {{ prize.score }} punktów
+      </span>
+    </p>
+    <p class="card-footer-item">
+      <span>
+        Kupione!
+      </span>
+    </p>
+  </footer>
+</div>
+{% endfor %}
+
+<div class="link-home">
+  <a href="/">Główny Panel</a>
+</div>
+{% endblock %}

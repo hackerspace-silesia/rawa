@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<nav class="panel is-info has-background-white">
+  <p class="panel-heading">
+    Gratulacje!
+  </p>
+  <a class="panel-block">
+    Zyskałeś {{used_token.score}} punktów za ten przejazd.
+  </a>
+  <a class="panel-block">
+    Twoje miejsce w rankingu to 20 / 800.
+  </a>
+  <a class="panel-block">
+    Atrakcyjne nagrody już czekają!
+  </a>
+  <a class="panel-block">
+    Jeszcze więcej wesołych wiadomości
+  </a>
+</nav>
+
+<div class="link-home">
+ <a href="{{ url_for('home') }}">Wróć do głównej strony</a>
+</div>
+{% endblock %}
