@@ -1,6 +1,11 @@
 # rawa
 project for gruba.it hackathon 2019 Dec
 
+````
+virtualenv venv3 -ppython3
+source venv3/bin/activate
+````
+
 # install dev
 
 ```
